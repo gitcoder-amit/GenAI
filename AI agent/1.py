@@ -36,15 +36,16 @@ def set_thermostat_temperature(temperature: int) -> dict:
     return {"status": "success"}
 
 # Configure the client and model
-client = genai.Client(api_key="AIzaSyCadqhVQDLXGQ204L_eCuXM9oeTKFsGOVM")
+client = genai.Client(api_key="AIzaSyAa61fFQhgZbJf3qBY2LqR4UR4X5ugrpsY")
 config = types.GenerateContentConfig(
-    tools=[get_weather_forecast, set_thermostat_temperature, add_numbers, is_prime]
+    tools=[get_weather_forecast, set_thermostat_temperature, add_numbers, is_prime],
+    system_instruction="You are a AI agent. YOu can use tools to answer user queries. Always try to use tools when appropriate. If user asks general questions, answer them directly. If user asks specific questions that require tools, use the tools to get the answer. Always try to use tools when appropriate.",
 )
 
 system_prompt = "You are a helpful assistant that can provide weather forecasts and control the thermostat. You can call the following tools: get_weather_forecast(location), set_thermostat_temperature(temperature), sum and is_prime."
 
 chat = client.chats.create(
-    model="gemini-2.5-flash-lite",
+    model="gemini-2.5-flash",
     config=config,
     history=[
         {
@@ -64,6 +65,8 @@ while True:
         break
 
     response = chat.send_message(user_input)
+    if response.function_calls:
+        print(response.function_calls[0])
     print("Bot:", response.text)
 
 # Print the final, user-facing response
