@@ -42,3 +42,7 @@ while True:
 
     response = chat.send_message(user_input)
     print("Bot:", response.text)
+
+
+# generate_content() → like asking a stranger a single question
+# chat.send_message() → like continuing a conversation
